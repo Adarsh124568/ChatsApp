@@ -1099,6 +1099,66 @@ body[data-theme="dark"][data-accent] #mainDashboard>.wa-header,body[data-theme="
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    // ===== ChatsApp Android Push Registration =====
+
+const NOTIFICATION_WORKER =
+  "https://chatsapp-notifications.adarsh-sharma24718.workers.dev";
+
+let chatsAppFcmToken = null;
+
+window.onChatsAppFcmToken = async function(token) {
+  if (!token || typeof token !== "string") return;
+
+  chatsAppFcmToken = token;
+
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    const idToken = await user.getIdToken();
+
+    // Stop if the user logged out while waiting.
+    if (auth.currentUser?.uid !== user.uid) return;
+
+    const response = await fetch(
+      NOTIFICATION_WORKER + "/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + idToken
+        },
+        body: JSON.stringify({
+          token: chatsAppFcmToken
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "FCM registration failed: " + response.status
+      );
+    }
+
+    console.log("ChatsApp FCM registration successful");
+
+  } catch (error) {
+    console.error("ChatsApp notification error:", error);
+  }
+};
+
+function registerChatsAppNotifications() {
+  if (!auth.currentUser) return;
+
+  if (
+    window.ChatsAppAndroid &&
+    typeof window.ChatsAppAndroid.requestFcmToken === "function"
+  ) {
+    window.ChatsAppAndroid.requestFcmToken();
+  } else {
+    console.log("Android notification bridge unavailable");
+  }
+}
     const db = getDatabase(app);
     // Public/publishable key only. NEVER add a Supabase secret or service-role key here.
     const SUPABASE_BUCKET = 'ChatsApp Media';
@@ -1456,7 +1516,11 @@ body[data-theme="dark"][data-accent] #mainDashboard>.wa-header,body[data-theme="
     // ---------- AUTH STATE ----------
     onAuthStateChanged(auth, async (user) => {
       try {
-        if (user) { currentUser = user; await loadProfileAndRoute(); }
+        if (user) {
+  currentUser = user;
+  await loadProfileAndRoute();
+  registerChatsAppNotifications();
+}
         else { currentUser = null; currentProfile = null; cleanupListeners(); showAuthScreen(); }
       } catch (err) { console.error('Auth routing failed:', err); showAuthScreen(); }
       finally { dismissSplash(); }
