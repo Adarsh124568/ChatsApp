@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "948254375927",
+    "firebase_url": "https://chatsapp-baac6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "chatsapp-baac6",
+    "storage_bucket": "chatsapp-baac6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948254375927:android:0d33f6c5a63b6552bdf8f2",
+        "android_client_info": {
+          "package_name": "com.crystalapps.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948254375927-k4qpkgcs0onqi88llsjtnro9fdlpkhro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu1RkzAnzrzb1JHjSonrKphx-GpKITkIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948254375927-k4qpkgcs0onqi88llsjtnro9fdlpkhro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
