@@ -10,31 +10,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ChatsApp_Android_FCM_Project
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           packages: ''
 
-      - name: Set up Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
-      - name: Build Android APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+      - name: Build APK
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ChatsApp-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: ChatsApp_Android_FCM_Project/app/build/outputs/apk/debug/*.apk
